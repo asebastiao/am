@@ -1,0 +1,7 @@
+from django.apps import AppConfig
+
+
+class BiografiaConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'biografia'
+    verbose_name = 'Biografia'

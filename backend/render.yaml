@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: django-backend
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn portfolio_am_backend.wsgi
+    envVars:
+      - key: SECRET_KEY
+        value: @1xc99u^4gn7r4tu^n#bzrfxmd(h^ek@$bwi)&r1&0)@ou0(8z
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: muhanguenaart-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://muhanguenaart.vercel.app
+      - key: CLOUDINARY_CLOUD_NAME
+        value: dtmxuje9a
+      - key: CLOUDINARY_API_KEY
+        value: 772288168282543
+      - key: CLOUDINARY_API_SECRET
+        value: 8-li3TwDBeM9DtkGGDjwkEy0xeU
