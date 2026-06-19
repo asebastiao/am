@@ -45,22 +45,7 @@ export default function Hero() {
           Azevedo Muhanguena
         </motion.h1>
 
-        <motion.button
-          id="btn-explore-artworks"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          onClick={() => router.push('/galeria')}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={`px-8 py-4 text-xs tracking-[0.3em] uppercase transition-all duration-300 border focus:outline-none ${
-            darkMode
-              ? 'bg-transparent text-white border-white/20 hover:bg-white hover:text-brand-dark hover:border-white'
-              : 'bg-transparent text-brand-charcoal border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-white hover:border-brand-charcoal'
-          }`}
-        >
-          Explorar Obras
-        </motion.button>
+      
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
