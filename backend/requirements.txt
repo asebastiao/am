@@ -10,3 +10,6 @@ django-cloudinary-storage>=0.3.0
 django-jazzmin>=3.0
 django-ratelimit>=4.1
 gunicorn>=21.2
+django-extensions
+drf-spectacular
+drf-yasg
