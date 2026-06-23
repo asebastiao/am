@@ -37,8 +37,8 @@ export default function Footer() {
               {[
                 { href: '/',          label: 'Início' },
                 { href: '/galeria',   label: 'Galeria de Obras' },
-                { href: '/biografia', label: 'Biografia' },
                 { href: '/agenda',    label: 'Agenda & Exposições' },
+                { href: '/biografia', label: 'Biografia' },
                 { href: '/contacto',  label: 'Contacto' },
               ].map(item => (
                 <li key={item.href}>
