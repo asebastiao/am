@@ -10,8 +10,8 @@ import { useTheme } from '@/lib/theme';
 const navItems = [
   { href: '/',          label: 'Home' },
   { href: '/galeria',   label: 'Galeria' },
-  { href: '/biografia', label: 'Biografia' },
   { href: '/agenda',    label: 'Agenda' },
+  { href: '/biografia', label: 'Biografia' },
   { href: '/contacto',  label: 'Contacto' },
 ] as const;
 
@@ -167,7 +167,7 @@ export default function Navbar() {
                 Azevedo Muhanguena
               </p>
               <p className="text-[9px] tracking-wider text-zinc-400 mt-1">
-                Atelier d&apos;Art Contemporain — Évora
+                Atelier d&apos;Art Contemporain — Luanda
               </p>
             </div>
           </motion.div>
