@@ -37,7 +37,7 @@ export default function GalleryGrid({ artworks }: Props) {
             className={`px-6 py-2.5 text-xs uppercase tracking-[0.25em] border transition-all duration-300 focus:outline-none ${
               filter === tab.id
                 ? darkMode
-                  ? 'bg-white text-zinc-950 border-white font-medium'
+                  ? 'bg-brand-gold text-black border-brand-gold font-medium'
                   : 'bg-brand-charcoal text-[#fefdfb] border-brand-charcoal font-medium'
                 : darkMode
                   ? 'border-white/10 text-zinc-400 hover:border-white/30 hover:text-white'
