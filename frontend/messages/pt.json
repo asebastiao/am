@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "home": "Home",
+    "obras": "Obras",
+    "galeria": "Galeria",
+    "agenda": "Agenda",
+    "biografia": "Biografia",
+    "contacto": "Contacto"
+  },
+  "hero": {
+    "tagline": "Arte Contemporânea",
+    "carouselAlt": "Imagem do carrossel",
+    "slideAriaLabel": "Ir para o slide"
+  },
+  "home": {
+    "curatorship": "Curadoria Selecta",
+    "featuredWorks": "Obras Fundamentais",
+    "viewGalleryCta": "Ver Todas as Obras →",
+    "consultWork": "Consultar Obra →"
+  },
+  "footer": {
+    "rights": "Todos os direitos reservados.",
+    "navTitle": "Navegação",
+    "contactTitle": "Atelier & Contactos",
+    "backToTop": "Subir",
+    "tagline": "Pesquisa plástica dedicada à matéria, escultura monolítica e pintura de cargas minerais estruturadas sob o silêncio da planície alentejana.",
+    "navHome": "Início",
+    "navObras": "Obras",
+    "navGaleria": "Exposições & Arquivo",
+    "navAgenda": "Agenda & Exposições",
+    "navBiografia": "Biografia",
+    "navContacto": "Contacto",
+    "location": "Luanda, Angola"
+  },
+  "common": {
+    "loading": "A carregar…",
+    "readMore": "Saber mais",
+    "backToGallery": "Voltar à galeria",
+    "language": "Idioma",
+    "switchLang": "Mudar para English",
+    "toggleTheme": "Alternar sala clara / escura",
+    "mainMenu": "Menu principal",
+    "atelierSubtitle": "Atelier d'Art Contemporain — Luanda"
+  },
+  "gallery": {
+    "all": "Todas as Obras",
+    "available": "Disponíveis para Aquisição",
+    "archived": "Exposições & Arquivo",
+    "noItems": "Nenhuma obra encontrada para esta categoria neste momento.",
+    "backToAll": "Voltar a todas as obras",
+    "viewDetails": "Ver Detalhes →",
+    "statusAvailable": "Disponível",
+    "statusSold": "Vendido",
+    "statusPrivate": "Coleção Particular"
+  },
+  "galleryItems": {
+    "noItems": "Nenhum item encontrado para esta secção neste momento.",
+    "tabExposicoes": "Exposições",
+    "tabArquivo": "Arquivo"
+  },
+  "artworkDetail": {
+    "backToGallery": "Voltar para Obras",
+    "category": "Pintura Contemporânea",
+    "technique": "Técnica",
+    "dimensions": "Dimensões",
+    "status": "Estado",
+    "atelierNote": "Nota do Atelier",
+    "requestQuote": "Solicitar Cotação / Visita",
+    "statusAvailable": "Disponível",
+    "statusSold": "Vendida / Colecção Privada",
+    "statusPrivate": "Coleção Particular"
+  },
+  "biography": {
+    "subtitle": "Manifesto & Alma",
+    "soloExhibitions": "Exposições Individuais",
+    "groupExhibitions": "Exposições Colectivas",
+    "awards": "Prémios & Distinções"
+  },
+  "agenda": {
+    "upcomingSubtitle": "Próximos Compromissos",
+    "upcomingTitle": "Exposições & Projectos Futuros",
+    "noUpcoming": "Não existem eventos agendados para os próximos meses. Por favor verifique o catálogo ou entre em contacto.",
+    "pastSubtitle": "Histórico do Percurso",
+    "pastTitle": "Exposições & Palestras Anteriores",
+    "typeExhibition": "Exposição",
+    "typeWorkshop": "Workshop Prático",
+    "typeTalk": "Conferência / Debate",
+    "typeEvent": "Vernissage / Evento"
+  },
+  "contact": {
+    "subtitle": "Contacto & Aquisição",
+    "title": "Canais do Atelier",
+    "intro": "Para agendamento de visitas privadas ao atelier, aquisições comerciais, utilize os canais abaixo ou o formulário direct-to-studio.",
+    "emailLabel": "Comunicação Geral e Vendas",
+    "phoneLabel": "Telefone Studio",
+    "addressLabel": "Espaço Físico",
+    "artworkOfInterest": "Obra de Interesse",
+    "nameLabel": "Nome Completo",
+    "namePlaceholder": "O seu nome",
+    "emailFieldLabel": "Endereço de Email",
+    "emailPlaceholder": "email@dominio.com",
+    "phoneFieldLabel": "Telefone",
+    "phoneOptional": "(opcional)",
+    "phonePlaceholder": "+244 9XX XXX XXX",
+    "messageLabel": "Assunto / Mensagem para o Atelier",
+    "messagePlaceholder": "Descreva o seu interesse, questão ou pedido especial...",
+    "submitButton": "Enviar Mensagem",
+    "submitting": "A enviar dados para o Atelier...",
+    "successTitle": "Envio Concluído",
+    "successMessage": "A sua mensagem foi registada. Responderemos ao seu endereço de email com a brevidade exigida.",
+    "exploreGallery": "Explorar Obras",
+    "errNameRequired": "Nome completo é obrigatório.",
+    "errEmailRequired": "Email é obrigatório.",
+    "errEmailInvalid": "Por favor introduza um email válido.",
+    "errMessageRequired": "A mensagem não pode estar vazia.",
+    "errSubmitGeneric": "Erro ao enviar mensagem. Tente novamente.",
+    "errConnectionFailed": "Incapaz de estabelecer ligação com o servidor. Verifique a sua conexão.",
+    "defaultMessage": "Gostaria de solicitar informações de cotação, catálogos detalhados e condições de transporte especializado para a obra"
+  },
+  "metadata": {
+    "titleDefault": "Azevedo Muhanguena — Arte Contemporânea",
+    "titleTemplate": "%s | Azevedo Muhanguena",
+    "description": "Portfolio de Azevedo Muhanguena — Artista plástica especializada em escultura monolítica, pintura de cargas minerais e relevos texturais. Atelier no Alentejo, Portugal.",
+    "siteName": "Azevedo Muhanguena"
+  }
+}

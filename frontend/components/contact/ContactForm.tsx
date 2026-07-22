@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
-import { useTheme } from '@/lib/theme';
 import { submitContact } from '@/lib/api';
+import { useTranslations, useLocale } from 'next-intl';
+import { translateDynamic } from '@/lib/dynamic-translator';
 import { Artwork, ContactInfo } from '@/types';
 
 interface Props {
@@ -15,8 +16,9 @@ interface Props {
 }
 
 export default function ContactForm({ artworks, selectedArtworkId, contactInfo }: Props) {
-  const { darkMode } = useTheme();
   const router = useRouter();
+  const t = useTranslations('contact');
+  const locale = useLocale();
 
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors]   = useState<Record<string, string>>({});
@@ -32,17 +34,17 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
     if (interestedArtwork) {
       setFormData(prev => ({
         ...prev,
-        message: `Gostaria de solicitar informações de cotação, catálogos detalhados e condições de transporte especializado para a obra "${interestedArtwork.title}" (${interestedArtwork.year}, ${interestedArtwork.dimensions}).`,
+        message: `${t('defaultMessage')} "${translateDynamic(interestedArtwork.title, locale)}" (${interestedArtwork.year}, ${interestedArtwork.dimensions}).`,
       }));
     }
-  }, [interestedArtwork]);
+  }, [interestedArtwork, t, locale]);
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!formData.name.trim())    e.name    = 'Nome completo é obrigatório.';
-    if (!formData.email.trim())   e.email   = 'Email é obrigatório.';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = 'Por favor introduza um email válido.';
-    if (!formData.message.trim()) e.message = 'A mensagem não pode estar vazia.';
+    if (!formData.name.trim())    e.name    = t('errNameRequired');
+    if (!formData.email.trim())   e.email   = t('errEmailRequired');
+    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) e.email = t('errEmailInvalid');
+    if (!formData.message.trim()) e.message = t('errMessageRequired');
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -71,23 +73,16 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
         setSuccessMessage(result.message);
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        setErrors({ submit: result.message || 'Erro ao enviar mensagem. Tente novamente.' });
+        setErrors({ submit: result.message || t('errSubmitGeneric') });
       }
     } catch {
-      setErrors({ submit: 'Incapaz de estabelecer ligação com o servidor. Verifique a sua conexão.' });
+      setErrors({ submit: t('errConnectionFailed') });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const inputClass = (field: string) =>
-    `w-full bg-transparent border-b py-3 text-sm font-light focus:outline-none transition-colors placeholder:text-zinc-400 ${
-      errors[field]
-        ? 'border-red-400 text-red-400'
-        : darkMode
-          ? 'border-white/10 text-zinc-100 focus:border-brand-gold'
-          : 'border-black/10 text-zinc-900 focus:border-brand-gold'
-    }`;
+  const inputClass = (field: string) => `field-input ${errors[field] ? 'field-error' : ''}`;
 
   return (
     <article id="contact-view-layout" className="py-8 sm:py-12">
@@ -97,28 +92,24 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
         <div className="lg:col-span-5 space-y-10">
           <div className="space-y-4">
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.45em] text-brand-gold font-semibold block">
-              Contacto & Aquisição
+              {t('subtitle')}
             </span>
-            <h1 className={`font-serif text-3xl sm:text-4xl xl:text-5xl tracking-tight ${
-              darkMode ? 'text-white' : 'text-zinc-950'
-            }`}>
-              Canais do Atelier
+            <h1 className="font-serif text-3xl sm:text-4xl xl:text-5xl tracking-tight" style={{ color: 'var(--color-fg-primary)' }}>
+              {t('title')}
             </h1>
-            <p className={`text-sm font-light leading-relaxed max-w-sm ${darkMode ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              Para agendamento de visitas privadas ao atelier, aquisições comerciais, utilize os canais abaixo ou o formulário direct-to-studio.
+            <p className="text-sm font-light leading-relaxed max-w-sm" style={{ color: 'var(--color-fg-secondary)' }}>
+              {t('intro')}
             </p>
           </div>
 
-          <div className="space-y-6 pt-6 text-sm font-light">
+          <div className="space-y-5 pt-2 text-sm font-light">
             {contactInfo?.email_contacto && (
-              <div className="flex items-start space-x-4">
+              <div className="card flex items-start space-x-4 p-4">
                 <Mail size={16} className="text-brand-gold mt-1.5 flex-shrink-0" />
                 <div>
-                  <span className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-1 ${
-                    darkMode ? 'text-zinc-500' : 'text-zinc-400'
-                  }`}>Comunicação Geral e Vendas</span>
+                  <span className="field-label !mb-1">{t('emailLabel')}</span>
                   <a href={`mailto:${contactInfo.email_contacto}`}
-                    className={`hover:text-brand-gold transition-colors ${darkMode ? 'text-zinc-200' : 'text-zinc-900'}`}>
+                    className="hover:text-brand-gold transition-colors duration-200" style={{ color: 'var(--color-fg-primary)' }}>
                     {contactInfo.email_contacto}
                   </a>
                 </div>
@@ -126,13 +117,11 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
             )}
 
             {contactInfo?.telefone_contacto && (
-              <div className="flex items-start space-x-4">
+              <div className="card flex items-start space-x-4 p-4">
                 <Phone size={16} className="text-brand-gold mt-1.5 flex-shrink-0" />
                 <div>
-                  <span className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-1 ${
-                    darkMode ? 'text-zinc-500' : 'text-zinc-400'
-                  }`}>Telefone Studio</span>
-                  <span className={darkMode ? 'text-zinc-200' : 'text-zinc-900'}>
+                  <span className="field-label !mb-1">{t('phoneLabel')}</span>
+                  <span style={{ color: 'var(--color-fg-primary)' }}>
                     {contactInfo.telefone_contacto}
                   </span>
                 </div>
@@ -140,13 +129,11 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
             )}
 
             {contactInfo?.endereco && (
-              <div className="flex items-start space-x-4">
+              <div className="card flex items-start space-x-4 p-4">
                 <MapPin size={16} className="text-brand-gold mt-1.5 flex-shrink-0" />
                 <div>
-                  <span className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-1 ${
-                    darkMode ? 'text-zinc-500' : 'text-zinc-400'
-                  }`}>Espaço Físico</span>
-                  <span className={`block leading-relaxed ${darkMode ? 'text-zinc-200' : 'text-zinc-950'}`}>
+                  <span className="field-label !mb-1">{t('addressLabel')}</span>
+                  <span className="block leading-relaxed" style={{ color: 'var(--color-fg-primary)' }}>
                     {contactInfo.endereco}
                   </span>
                 </div>
@@ -154,7 +141,7 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
             )}
 
             {contactInfo?.link_instagram && (
-              <div className="flex items-start space-x-4">
+              <div className="card flex items-start space-x-4 p-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width={16} viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
                   className="text-brand-gold mt-1.5 flex-shrink-0">
@@ -163,11 +150,9 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                 </svg>
                 <div>
-                  <span className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-1 ${
-                    darkMode ? 'text-zinc-500' : 'text-zinc-400'
-                  }`}>Instagram</span>
+                  <span className="field-label !mb-1">Instagram</span>
                   <a href={contactInfo.link_instagram} target="_blank" rel="noopener noreferrer"
-                    className={`hover:text-brand-gold transition-colors ${darkMode ? 'text-zinc-200' : 'text-zinc-900'}`}>
+                    className="hover:text-brand-gold transition-colors duration-200" style={{ color: 'var(--color-fg-primary)' }}>
                     {contactInfo.nome_instagram || contactInfo.link_instagram}
                   </a>
                 </div>
@@ -185,24 +170,21 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
-                className={`p-8 md:p-12 border text-center flex flex-col items-center justify-center space-y-6 ${
-                  darkMode ? 'border-brand-gold/20 bg-zinc-900/10' : 'border-brand-gold/30 bg-brand-soft-gray/30'
-                }`}
+                className="card p-8 md:p-12 text-center flex flex-col items-center justify-center space-y-6"
+                style={{ borderColor: 'color-mix(in srgb, var(--color-brand-gold) 25%, transparent)' }}
               >
-                <CheckCircle size={48} className="text-[#c3a472] animate-pulse" />
-                <h3 className={`font-serif text-2xl tracking-tight ${darkMode ? 'text-white' : 'text-zinc-900'}`}>
-                  Envio Concluído
+                <CheckCircle size={48} className="text-[#c3a472]" />
+                <h3 className="font-serif text-2xl tracking-tight" style={{ color: 'var(--color-fg-primary)' }}>
+                  {t('successTitle')}
                 </h3>
-                <p className={`text-sm font-light max-w-sm leading-relaxed ${darkMode ? 'text-zinc-300' : 'text-zinc-700'}`}>
-                  {successMessage || 'A sua mensagem foi registada. Responderemos ao seu endereço de email com a brevidade exigida.'}
+                <p className="text-sm font-light max-w-sm leading-relaxed" style={{ color: 'var(--color-fg-secondary)' }}>
+                  {successMessage || t('successMessage')}
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); router.push('/galeria'); }}
-                  className={`flex items-center space-x-2 text-xs uppercase tracking-[0.25em] hover:text-brand-gold transition-colors ${
-                    darkMode ? 'text-zinc-400' : 'text-zinc-600'
-                  }`}
+                  onClick={() => { setSubmitted(false); router.push('/obras'); }}
+                  className="btn-ghost !px-0 !py-0 normal-case tracking-[0.25em] text-xs"
                 >
-                  <span>Explorar Galeria</span>
+                  <span>{t('exploreGallery')}</span>
                   <ArrowRight size={13} />
                 </button>
               </motion.div>
@@ -216,82 +198,79 @@ export default function ContactForm({ artworks, selectedArtworkId, contactInfo }
                 className="space-y-10"
               >
                 {interestedArtwork && (
-                  <div className={`px-5 py-4 border-l-2 border-brand-gold text-xs font-light leading-relaxed ${
-                    darkMode ? 'bg-brand-gold/5 text-zinc-300' : 'bg-brand-gold/5 text-zinc-700'
-                  }`}>
+                  <div
+                    className="px-5 py-4 text-xs font-light leading-relaxed rounded-[var(--radius-sm)]"
+                    style={{
+                      borderLeft: '2px solid var(--color-brand-gold)',
+                      backgroundColor: 'color-mix(in srgb, var(--color-brand-gold) 6%, transparent)',
+                      color: 'var(--color-fg-secondary)',
+                    }}
+                  >
                     <span className="text-brand-gold text-[10px] uppercase tracking-widest font-medium block mb-1">
-                      Obra de Interesse
+                      {t('artworkOfInterest')}
                     </span>
-                    {interestedArtwork.title} — {interestedArtwork.year}
+                    {translateDynamic(interestedArtwork.title, locale)} — {interestedArtwork.year}
                   </div>
                 )}
 
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div>
-                      <label className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-2 ${darkMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                        Nome Completo <span className="text-red-500">*</span>
+                      <label className="field-label">
+                        {t('nameLabel')} <span className="text-red-500">*</span>
                       </label>
                       <input name="name" value={formData.name} onChange={handleChange}
-                        placeholder="O seu nome" className={inputClass('name')} />
-                      {errors.name && <p className="text-red-400 text-[11px] mt-1">{errors.name}</p>}
+                        placeholder={t('namePlaceholder')} className={inputClass('name')} />
+                      {errors.name && <p className="text-[11px] mt-1.5" style={{ color: 'var(--color-danger)' }}>{errors.name}</p>}
                     </div>
                     <div>
-                      <label className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-2 ${darkMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                        Endereço de Email <span className="text-red-500">*</span>
+                      <label className="field-label">
+                        {t('emailFieldLabel')} <span className="text-red-500">*</span>
                       </label>
                       <input name="email" type="email" value={formData.email} onChange={handleChange}
-                        placeholder="email@dominio.com" className={inputClass('email')} />
-                      {errors.email && <p className="text-red-400 text-[11px] mt-1">{errors.email}</p>}
+                        placeholder={t('emailPlaceholder')} className={inputClass('email')} />
+                      {errors.email && <p className="text-[11px] mt-1.5" style={{ color: 'var(--color-danger)' }}>{errors.email}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-2 ${darkMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                      Telefone <span className="text-zinc-400 normal-case">(opcional)</span>
+                    <label className="field-label">
+                      {t('phoneFieldLabel')} <span className="normal-case" style={{ color: 'var(--color-fg-muted)' }}>{t('phoneOptional')}</span>
                     </label>
                     <input name="phone" value={formData.phone} onChange={handleChange}
-                      placeholder="+244 9XX XXX XXX" className={inputClass('phone')} />
+                      placeholder={t('phonePlaceholder')} className={inputClass('phone')} />
                   </div>
 
                   <div>
-                    <label className={`block text-[10px] uppercase tracking-[0.2em] font-medium mb-2 ${darkMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                      Assunto / Mensagem para o Atelier <span className="text-red-500">*</span>
+                    <label className="field-label">
+                      {t('messageLabel')} <span className="text-red-500">*</span>
                     </label>
                     <textarea name="message" value={formData.message} onChange={handleChange}
-                      rows={6} placeholder="Descreva o seu interesse, questão ou pedido especial..."
+                      rows={6} placeholder={t('messagePlaceholder')}
                       className={`${inputClass('message')} resize-none`} />
-                    {errors.message && <p className="text-red-400 text-[11px] mt-1">{errors.message}</p>}
+                    {errors.message && <p className="text-[11px] mt-1.5" style={{ color: 'var(--color-danger)' }}>{errors.message}</p>}
                   </div>
                 </div>
 
                 {errors.submit && (
-                  <p className="text-red-400 text-xs border border-red-400/20 px-4 py-3 bg-red-400/5">
+                  <p className="text-xs px-4 py-3 rounded-[var(--radius-sm)]" style={{ color: 'var(--color-danger)', backgroundColor: 'var(--color-danger-bg)', border: '1px solid color-mix(in srgb, var(--color-danger) 25%, transparent)' }}>
                     {errors.submit}
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full py-4 px-6 text-xs tracking-[0.3em] uppercase transition-all duration-300 border flex items-center justify-center space-x-3 focus:outline-none disabled:opacity-50 ${
-                    darkMode
-                      ? 'bg-white text-zinc-950 border-white hover:bg-brand-gold hover:border-brand-gold'
-                      : 'bg-brand-charcoal text-[#fefdfb] border-brand-charcoal hover:bg-brand-gold hover:text-brand-charcoal hover:border-brand-gold'
-                  }`}
-                >
+                <button type="submit" disabled={isSubmitting} className="btn-primary w-full">
                   {isSubmitting ? (
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                        className="h-3.5 w-3.5 border border-current border-t-transparent rounded-full"
+                        className="h-3.5 w-3.5 border border-current border-t-transparent"
                       />
-                      <span>A enviar dados para o Atelier...</span>
+                      <span>{t('submitting')}</span>
                     </>
                   ) : (
                     <>
-                      <span>Enviar Mensagem</span>
+                      <span>{t('submitButton')}</span>
                       <ArrowRight size={13} />
                     </>
                   )}

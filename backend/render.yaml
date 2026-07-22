@@ -7,17 +7,22 @@ services:
       python manage.py collectstatic --noinput
     startCommand: gunicorn portfolio_am_backend.wsgi
     envVars:
+      # IMPORTANTE: nenhum valor de segredo fica neste ficheiro (é versionado no git).
+      # "sync: false" faz o Render pedir o valor uma vez no dashboard e guardá-lo
+      # de forma cifrada — nunca no repositório.
       - key: SECRET_KEY
-        value: @1xc99u^4gn7r4tu^n#bzrfxmd(h^ek@$bwi)&r1&0)@ou0(8z
+        sync: false
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: muhanguenaart-backend.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://muhanguenaart-backend.onrender.com
       - key: FRONTEND_URL
         value: https://muhanguenaart.vercel.app
       - key: CLOUDINARY_CLOUD_NAME
-        value: dtmxuje9a
+        sync: false
       - key: CLOUDINARY_API_KEY
-        value: 772288168282543
+        sync: false
       - key: CLOUDINARY_API_SECRET
-        value: 8-li3TwDBeM9DtkGGDjwkEy0xeU
+        sync: false

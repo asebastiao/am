@@ -1,25 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect, useTransition } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from '@/lib/theme';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 
 const navItems = [
-  { href: '/',          label: 'Home' },
-  { href: '/galeria',   label: 'Galeria' },
-  { href: '/agenda',    label: 'Agenda' },
-  { href: '/biografia', label: 'Biografia' },
-  { href: '/contacto',  label: 'Contacto' },
+  { href: '/',          key: 'home' },
+  { href: '/obras',     key: 'obras' },
+  { href: '/galeria',   key: 'galeria' },
+  { href: '/agenda',    key: 'agenda' },
+  { href: '/biografia', key: 'biografia' },
+  { href: '/contacto',  key: 'contacto' },
 ] as const;
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { darkMode, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const locale = useLocale();
+  const t = useTranslations();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -27,7 +33,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
@@ -35,22 +40,33 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
 
+  const toggleLanguage = () => {
+    const nextLocale = locale === 'pt' ? 'en' : 'pt';
+    startTransition(() => {
+      router.replace(pathname, { locale: nextLocale });
+    });
+  };
+
   return (
     <>
       <nav
         id="main-navbar"
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          scrolled
-            ? darkMode
-              ? 'bg-brand-dark/95 border-b border-white/5 shadow-sm backdrop-blur-md py-4'
-              : 'bg-white/95 border-b border-black/5 shadow-[0_1px_10px_rgba(0,0,0,0.02)] backdrop-blur-md py-4'
-            : 'bg-transparent py-6'
+          scrolled ? 'backdrop-blur-md py-4' : 'bg-transparent py-6'
         }`}
+        style={scrolled ? {
+          backgroundColor: 'color-mix(in srgb, var(--color-surface-1) 92%, transparent)',
+          borderBottom: '1px solid var(--color-border-subtle)',
+          boxShadow: 'var(--shadow-sm)',
+        } : undefined}
       >
         <div className="max-w-7xl mx-auto px-6 sm:px-8 xl:px-12 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex flex-col items-start focus:outline-none">
-            <span className="font-serif text-xl sm:text-2xl tracking-[0.2em] uppercase transition-colors duration-300">
+          <Link href="/" className="group flex flex-col items-start focus-visible:outline-none">
+            <span
+              className="font-serif text-xl sm:text-2xl tracking-[0.2em] uppercase transition-colors duration-300"
+              style={{ color: 'var(--color-fg-primary)' }}
+            >
               Azevedo Muhanguena
             </span>
             <span className="text-[9px] uppercase tracking-[0.4em] text-brand-gold mt-1 group-hover:tracking-[0.5em] transition-all duration-300">
@@ -59,20 +75,17 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
+          <div className="hidden md:flex items-center space-x-8 lg:space-x-10">
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative text-xs uppercase tracking-[0.25em] py-2 transition-colors duration-300 focus:outline-none hover:text-brand-gold ${
-                    active
-                      ? 'text-brand-gold font-medium'
-                      : darkMode ? 'text-zinc-400' : 'text-zinc-600'
-                  }`}
+                  className="relative text-xs uppercase tracking-[0.25em] py-2 transition-colors duration-300 focus-visible:outline-none hover:text-brand-gold"
+                  style={{ color: active ? 'var(--color-brand-gold)' : 'var(--color-fg-secondary)', fontWeight: active ? 500 : 400 }}
                 >
-                  {item.label}
+                  {t(`nav.${item.key}`)}
                   {active && (
                     <motion.div
                       layoutId="activeIndicator"
@@ -84,39 +97,53 @@ export default function Navbar() {
               );
             })}
 
-            <button
-              id="theme-toggle-desktop"
-              onClick={toggle}
-              className={`p-2 rounded-full border transition-all duration-300 ${
-                darkMode
-                  ? 'border-white/10 hover:bg-white/5 text-brand-gold'
-                  : 'border-black/5 hover:bg-black/5 text-zinc-600 hover:text-brand-gold'
-              } focus:outline-none`}
-              aria-label="Alternar sala clara / escura"
-            >
-              {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
+            <div className="flex items-center space-x-2 pl-2">
+              <button
+                id="theme-toggle-desktop"
+                onClick={toggle}
+                className="icon-btn"
+                aria-label={t('common.toggleTheme')}
+              >
+                {darkMode ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+
+              <button
+                id="lang-toggle-desktop"
+                onClick={toggleLanguage}
+                disabled={isPending}
+                className="icon-btn !w-auto px-3 text-[11px] uppercase tracking-widest font-medium"
+                aria-label={t('common.switchLang')}
+              >
+                {locale === 'pt' ? 'EN' : 'PT'}
+              </button>
+            </div>
           </div>
 
           {/* Mobile Controls */}
-          <div className="flex items-center space-x-3 md:hidden">
+          <div className="flex items-center space-x-2 md:hidden">
             <button
               id="theme-toggle-mobile"
               onClick={toggle}
-              className={`p-2 rounded-full border ${
-                darkMode ? 'border-white/10 text-brand-gold' : 'border-black/5 text-zinc-600'
-              } focus:outline-none`}
-              aria-label="Alternar visual"
+              className="icon-btn"
+              aria-label={t('common.toggleTheme')}
             >
               {darkMode ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            <button
+              id="lang-toggle-mobile"
+              onClick={toggleLanguage}
+              disabled={isPending}
+              className="icon-btn !w-auto px-2.5 text-[10px] uppercase tracking-widest font-medium"
+              aria-label={t('common.switchLang')}
+            >
+              {locale === 'pt' ? 'EN' : 'PT'}
             </button>
             <button
               id="mobile-menu-trigger"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-2 -mr-2 transition-colors ${
-                darkMode ? 'text-zinc-200 hover:text-white' : 'text-zinc-800 hover:text-black'
-              } focus:outline-none`}
-              aria-label="Menu principal"
+              className="icon-btn"
+              aria-label={t('common.mainMenu')}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -133,9 +160,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-40 md:hidden flex flex-col justify-center px-8 sm:px-12 ${
-              darkMode ? 'bg-brand-dark' : 'bg-[#fefdfb]'
-            }`}
+            className="fixed inset-0 z-40 md:hidden flex flex-col justify-center px-8 sm:px-12 overlay-surface"
           >
             <div className="space-y-6 flex flex-col items-start mt-12">
               {navItems.map((item, index) => {
@@ -149,13 +174,13 @@ export default function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`text-2xl font-serif tracking-widest text-left focus:outline-none py-1 border-b border-transparent block ${
-                        active
-                          ? 'text-brand-gold border-brand-gold/20'
-                          : darkMode ? 'text-zinc-300' : 'text-zinc-700'
-                      }`}
+                      className="text-2xl font-serif tracking-widest text-left focus-visible:outline-none py-1 border-b block transition-colors duration-200"
+                      style={{
+                        color: active ? 'var(--color-brand-gold)' : 'var(--color-fg-secondary)',
+                        borderColor: active ? 'color-mix(in srgb, var(--color-brand-gold) 20%, transparent)' : 'transparent',
+                      }}
                     >
-                      {item.label}
+                      {t(`nav.${item.key}`)}
                     </Link>
                   </motion.div>
                 );
@@ -163,11 +188,11 @@ export default function Navbar() {
             </div>
 
             <div className="absolute bottom-12 left-8 sm:left-12">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500">
+              <p className="text-[10px] uppercase tracking-[0.3em]" style={{ color: 'var(--color-fg-muted)' }}>
                 Azevedo Muhanguena
               </p>
-              <p className="text-[9px] tracking-wider text-zinc-400 mt-1">
-                Atelier d&apos;Art Contemporain — Luanda
+              <p className="text-[9px] tracking-wider mt-1" style={{ color: 'var(--color-fg-muted)' }}>
+                {t('common.atelierSubtitle')}
               </p>
             </div>
           </motion.div>

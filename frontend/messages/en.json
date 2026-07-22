@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "home": "Home",
+    "obras": "Artworks",
+    "galeria": "Gallery",
+    "agenda": "Events",
+    "biografia": "Biography",
+    "contacto": "Contact"
+  },
+  "hero": {
+    "tagline": "Contemporary Art",
+    "carouselAlt": "Carousel image",
+    "slideAriaLabel": "Go to slide"
+  },
+  "home": {
+    "curatorship": "Curated Selection",
+    "featuredWorks": "Featured Works",
+    "viewGalleryCta": "View All Artworks →",
+    "consultWork": "Inquire About This Work →"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "navTitle": "Navigation",
+    "contactTitle": "Studio & Contact",
+    "backToTop": "Top",
+    "tagline": "A material-driven artistic practice — monolithic sculpture and mineral-pigment painting shaped by the silence of the Alentejo plains.",
+    "navHome": "Home",
+    "navObras": "Artworks",
+    "navGaleria": "Exhibitions & Archive",
+    "navAgenda": "Agenda & Exhibitions",
+    "navBiografia": "Biography",
+    "navContacto": "Contact",
+    "location": "Luanda, Angola"
+  },
+  "common": {
+    "loading": "Loading…",
+    "readMore": "Read more",
+    "backToGallery": "Back to gallery",
+    "language": "Language",
+    "switchLang": "Switch to Português",
+    "toggleTheme": "Toggle light / dark mode",
+    "mainMenu": "Main menu",
+    "atelierSubtitle": "Contemporary Art Atelier — Luanda"
+  },
+  "gallery": {
+    "all": "All Artworks",
+    "available": "Available for Purchase",
+    "archived": "Exhibitions & Archive",
+    "noItems": "No artworks found for this category at the moment.",
+    "backToAll": "Back to all artworks",
+    "viewDetails": "View Details →",
+    "statusAvailable": "Available",
+    "statusSold": "Sold",
+    "statusPrivate": "Private Collection"
+  },
+  "galleryItems": {
+    "noItems": "No items found for this section at the moment.",
+    "tabExposicoes": "Exhibitions",
+    "tabArquivo": "Archive"
+  },
+  "artworkDetail": {
+    "backToGallery": "Back to Artworks",
+    "category": "Contemporary Painting",
+    "technique": "Technique",
+    "dimensions": "Dimensions",
+    "status": "Status",
+    "atelierNote": "Studio Notes",
+    "requestQuote": "Request Quote / Visit",
+    "statusAvailable": "Available",
+    "statusSold": "Sold / Private Collection",
+    "statusPrivate": "Private Collection"
+  },
+  "biography": {
+    "subtitle": "Manifesto & Soul",
+    "soloExhibitions": "Solo Exhibitions",
+    "groupExhibitions": "Group Exhibitions",
+    "awards": "Awards & Distinctions"
+  },
+  "agenda": {
+    "upcomingSubtitle": "Upcoming Events",
+    "upcomingTitle": "Exhibitions & Future Projects",
+    "noUpcoming": "There are no events scheduled for the coming months. Please check the catalogue or get in touch.",
+    "pastSubtitle": "Past Journey",
+    "pastTitle": "Past Exhibitions & Talks",
+    "typeExhibition": "Exhibition",
+    "typeWorkshop": "Practical Workshop",
+    "typeTalk": "Conference / Debate",
+    "typeEvent": "Vernissage / Event"
+  },
+  "contact": {
+    "subtitle": "Contact & Acquisition",
+    "title": "Studio Channels",
+    "intro": "For scheduling private studio visits, commercial acquisitions, use the channels below or the direct-to-studio form.",
+    "emailLabel": "General Communication & Sales",
+    "phoneLabel": "Studio Phone",
+    "addressLabel": "Physical Space",
+    "artworkOfInterest": "Artwork of Interest",
+    "nameLabel": "Full Name",
+    "namePlaceholder": "Your name",
+    "emailFieldLabel": "Email Address",
+    "emailPlaceholder": "email@domain.com",
+    "phoneFieldLabel": "Phone",
+    "phoneOptional": "(optional)",
+    "phonePlaceholder": "+244 9XX XXX XXX",
+    "messageLabel": "Subject / Message to Studio",
+    "messagePlaceholder": "Describe your interest, question, or special request...",
+    "submitButton": "Send Message",
+    "submitting": "Sending to Studio...",
+    "successTitle": "Message Sent",
+    "successMessage": "Your message has been recorded. We will respond to your email address promptly.",
+    "exploreGallery": "Explore Artworks",
+    "errNameRequired": "Full name is required.",
+    "errEmailRequired": "Email is required.",
+    "errEmailInvalid": "Please enter a valid email address.",
+    "errMessageRequired": "Message cannot be empty.",
+    "errSubmitGeneric": "Error sending message. Please try again.",
+    "errConnectionFailed": "Unable to connect to the server. Please check your connection.",
+    "defaultMessage": "I would like to request pricing information, detailed catalogues, and specialised transport conditions for the artwork"
+  },
+  "metadata": {
+    "titleDefault": "Azevedo Muhanguena — Contemporary Art",
+    "titleTemplate": "%s | Azevedo Muhanguena",
+    "description": "Portfolio of Azevedo Muhanguena — Visual artist specialised in monolithic sculpture, mineral filler painting and textural reliefs. Studio in Alentejo, Portugal.",
+    "siteName": "Azevedo Muhanguena"
+  }
+}

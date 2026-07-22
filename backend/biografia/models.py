@@ -1,5 +1,7 @@
 from django.db import models
 
+from portfolio_am_backend.validators import validate_image_file
+
 
 class Biografia(models.Model):
     """Modelo para biografia do artista - instância única"""
@@ -22,7 +24,8 @@ class Biografia(models.Model):
     imagem = models.ImageField(
         upload_to='biografia/',
         verbose_name="Foto do Artista",
-        blank=True, null=True
+        blank=True, null=True,
+        validators=[validate_image_file],
     )
     data_atualizacao = models.DateTimeField(auto_now=True)
 

@@ -1,14 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* ────────────────────────────────────────────────────────────────────────
+   DESIGN SYSTEM — Azevedo Muhanguena
+   Tokens de cor, tipografia, espaçamento, raio e sombra. Modo claro por
+   omissão; `.dark-mode` (aplicado ao <body> por lib/theme.tsx) sobrepõe os
+   valores das mesmas variáveis — por isso as classes utilitárias (bg-surface-1,
+   text-fg-primary, etc.) não precisam de condição no JSX, o CSS resolve sozinho.
+   ──────────────────────────────────────────────────────────────────────── */
 @theme {
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-sans:  "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca — inalterada, é a identidade visual existente */
   --color-brand-beige:      #fefdfb;
   --color-brand-soft-gray:  #f5f4f0;
   --color-brand-gold:       #c3a472;
+  --color-brand-gold-hover: #b3925c;
   --color-brand-charcoal:   #151515;
   --color-brand-dark:       #0a0a0a;
+
+  /* Superfícies — níveis de elevação (claro por omissão) */
+  --color-surface-0: #fefdfb;   /* fundo da página */
+  --color-surface-1: #ffffff;   /* cards, navbar, footer */
+  --color-surface-2: #f6f5f1;   /* superfícies sobre superfícies: inputs, hover de linha */
+  --color-surface-3: #ececE6;   /* estado pressed/active, chips seleccionados */
+
+  --color-border-subtle: rgb(0 0 0 / 6%);
+  --color-border:        rgb(0 0 0 / 11%);
+  --color-border-strong: rgb(0 0 0 / 18%);
+
+  --color-fg-primary:   #18181b;
+  --color-fg-secondary: #52525b;
+  --color-fg-muted:     #8b8b93;
+  --color-fg-on-brand:  #ffffff;
+
+  --color-success: #10b981;
+  --color-danger:  #ef4444;
+  --color-danger-bg: rgb(239 68 68 / 8%);
+
+  /* Raio — removido: design totalmente recto, sem cantos arredondados */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-full: 0;
+
+  /* Sombras — discretas, para profundidade sem exagero */
+  --shadow-xs:  0 1px 2px rgb(0 0 0 / 4%);
+  --shadow-sm:  0 1px 3px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 4%);
+  --shadow-md:  0 4px 12px rgb(0 0 0 / 8%), 0 2px 4px rgb(0 0 0 / 4%);
+  --shadow-lg:  0 12px 32px rgb(0 0 0 / 12%), 0 4px 8px rgb(0 0 0 / 4%);
+  --shadow-gold-glow: 0 0 0 3px rgb(195 164 114 / 18%);
+}
+
+/* Modo escuro — inspirado em GitHub/Linear/Vercel/Notion/Stripe: nunca preto
+   absoluto, tons cinza-azulados com vários níveis de elevação claramente
+   distintos entre si. */
+.dark-mode {
+  --color-surface-0: #0b0c0f;   /* fundo da página */
+  --color-surface-1: #16171c;   /* cards, navbar, footer */
+  --color-surface-2: #1d1f26;   /* inputs, dropdowns, hover */
+  --color-surface-3: #262933;   /* estado pressed/active, chips seleccionados */
+
+  --color-border-subtle: rgb(255 255 255 / 6%);
+  --color-border:        rgb(255 255 255 / 11%);
+  --color-border-strong: rgb(255 255 255 / 20%);
+
+  --color-fg-primary:   #f4f4f5;
+  --color-fg-secondary: #a7a8b3;
+  --color-fg-muted:     #6f7280;
+  --color-fg-on-brand:  #ffffff;
+
+  --color-danger-bg: rgb(239 68 68 / 12%);
+  --shadow-xs:  0 1px 2px rgb(0 0 0 / 20%);
+  --shadow-sm:  0 1px 3px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 20%);
+  --shadow-md:  0 4px 16px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 20%);
+  --shadow-lg:  0 16px 40px rgb(0 0 0 / 46%), 0 4px 10px rgb(0 0 0 / 24%);
+  --shadow-gold-glow: 0 0 0 3px rgb(195 164 114 / 25%);
 }
 
 @layer base {
@@ -19,18 +87,171 @@
   }
 
   body {
-    @apply font-sans text-brand-charcoal bg-[#fefdfb] transition-colors duration-500 antialiased selection:bg-brand-gold/20 selection:text-brand-charcoal;
+    @apply font-sans antialiased selection:bg-brand-gold/20 selection:text-fg-primary;
+    background-color: var(--color-surface-0);
+    color: var(--color-fg-primary);
+    transition: background-color 400ms ease, color 400ms ease;
   }
 
-  ::-webkit-scrollbar       { width: 4px; height: 4px; }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+    line-height: 1.15;
+  }
+
+  p { line-height: 1.7; }
+
+  /* Foco por teclado — visível e consistente em toda a aplicação */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar       { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: #c3a472; }
+  ::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-brand-gold); }
 }
 
-.dark-mode {
-  @apply bg-brand-dark text-neutral-100;
+/* ────────────────────────────────────────────────────────────────────────
+   COMPONENTES REUTILIZÁVEIS
+   ──────────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* Botões ------------------------------------------------------------- */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.2em]
+           px-6 py-3.5 rounded-[var(--radius-sm)] transition-all duration-250 ease-out
+           focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none
+           active:scale-[0.98];
+  }
 
-  ::-webkit-scrollbar-thumb       { background: rgba(255,255,255,0.1); }
-  ::-webkit-scrollbar-thumb:hover { background: #c3a472; }
+  .btn-primary {
+    @apply text-fg-on-brand;
+    background-color: var(--color-brand-gold);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-brand-gold-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .btn-primary:focus-visible {
+    box-shadow: var(--shadow-gold-glow);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-surface-1);
+    color: var(--color-fg-primary);
+    border: 1px solid var(--color-border);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-brand-gold);
+    color: var(--color-brand-gold);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-ghost {
+    @apply bg-transparent;
+    color: var(--color-fg-secondary);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    color: var(--color-brand-gold);
+    background-color: var(--color-surface-2);
+  }
+
+  .icon-btn {
+    @apply inline-flex items-center justify-center p-2.5 transition-all duration-250
+           focus-visible:outline-none active:scale-95;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-fg-secondary);
+  }
+  .icon-btn:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-brand-gold);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Cards ---------------------------------------------------------------- */
+  .card {
+    @apply rounded-[var(--radius-md)] transition-all duration-300 ease-out;
+    background-color: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-xs);
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border);
+    transform: translateY(-3px);
+  }
+
+  .surface-1 { background-color: var(--color-surface-1); }
+  .surface-2 { background-color: var(--color-surface-2); }
+  .surface-3 { background-color: var(--color-surface-3); }
+
+  /* Inputs ----------------------------------------------------------------- */
+  .field-input {
+    @apply w-full text-sm font-light rounded-[var(--radius-sm)] px-4 py-3 transition-all duration-200
+           focus-visible:outline-none placeholder:text-fg-muted;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    color: var(--color-fg-primary);
+  }
+  .field-input:focus {
+    border-color: var(--color-brand-gold);
+    box-shadow: var(--shadow-gold-glow);
+    background-color: var(--color-surface-1);
+  }
+  .field-input.field-error {
+    border-color: var(--color-danger);
+    background-color: var(--color-danger-bg);
+  }
+
+  .field-label {
+    @apply block text-[10px] uppercase tracking-[0.2em] font-semibold mb-2;
+    color: var(--color-fg-muted);
+  }
+
+  /* Badges ------------------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium
+           px-2.5 py-1 rounded-[var(--radius-full)] border;
+  }
+  .badge-success { color: var(--color-success); border-color: color-mix(in srgb, var(--color-success) 30%, transparent); background-color: color-mix(in srgb, var(--color-success) 8%, transparent); }
+  .badge-neutral { color: var(--color-fg-muted); border-color: var(--color-border); background-color: var(--color-surface-2); }
+  .badge-gold    { color: var(--color-brand-gold); border-color: color-mix(in srgb, var(--color-brand-gold) 30%, transparent); background-color: color-mix(in srgb, var(--color-brand-gold) 8%, transparent); }
+
+  /* Filtro/segmented control (usado na Galeria) -------------------------- */
+  .filter-chip {
+    @apply px-5 py-2.5 text-xs uppercase tracking-[0.2em] font-medium rounded-[var(--radius-full)]
+           border transition-all duration-250 focus-visible:outline-none;
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border);
+    color: var(--color-fg-secondary);
+  }
+  .filter-chip:hover { border-color: var(--color-brand-gold); color: var(--color-brand-gold); }
+  .filter-chip.active {
+    background-color: var(--color-brand-gold);
+    border-color: var(--color-brand-gold);
+    color: var(--color-fg-on-brand);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Overlay tipo modal / menu móvel --------------------------------------- */
+  .overlay-surface {
+    background-color: var(--color-surface-0);
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-surface-3) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+  }
+  @keyframes skeleton-loading {
+    0%   { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 }

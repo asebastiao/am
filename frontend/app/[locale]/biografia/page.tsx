@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { getBiography } from '@/lib/api';
 import BiographyContent from '@/components/biography/BiographyContent';
 
@@ -7,7 +8,13 @@ export const metadata: Metadata = {
   description: 'Trajectória artística e currículo de Azevedo Muhanguena — exposições, prémios e manifesto.',
 };
 
-export default async function BiografiaPage() {
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function BiografiaPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const biography = await getBiography();
 
   return (
@@ -15,7 +22,7 @@ export default async function BiografiaPage() {
       {biography ? (
         <BiographyContent biography={biography} />
       ) : (
-        <p className="font-serif italic text-zinc-500 text-center py-24">
+        <p className="font-serif italic text-center py-24" style={{ color: 'var(--color-fg-muted)' }}>
           Biografia temporariamente indisponível.
         </p>
       )}

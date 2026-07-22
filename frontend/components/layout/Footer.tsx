@@ -1,50 +1,59 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Instagram, Mail, Facebook, ArrowUp } from 'lucide-react';
-import { useTheme } from '@/lib/theme';
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
-  const { darkMode } = useTheme();
+  const t = useTranslations();
 
   return (
     <footer
       id="main-footer"
-      className={`relative pt-8 pb-4 transition-colors duration-300 ${
-        darkMode
-          ? 'bg-brand-charcoal/40 text-neutral-400 border-t border-white/5'
-          : 'bg-brand-soft-gray/50 text-zinc-500 border-t border-black/5'
-      }`}
+      className="relative pt-14 pb-6 transition-colors duration-300 surface-1"
+      style={{ borderTop: '1px solid var(--color-border-subtle)', color: 'var(--color-fg-secondary)' }}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 xl:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8 pb-10">
           {/* Brand */}
-          <div className="md:col-span-2 space-y-2">
-            <h4 className={`font-serif text-lg tracking-widest uppercase ${darkMode ? 'text-white' : 'text-zinc-800'}`}>
+          <div className="md:col-span-2 space-y-3">
+            <h4 className="font-serif text-lg tracking-widest uppercase" style={{ color: 'var(--color-fg-primary)' }}>
               Azevedo Muhanguena
             </h4>
             <p className="text-xs font-light max-w-sm leading-relaxed">
-              Pesquisa plástica dedicada à matéria, escultura monolítica e pintura de cargas minerais estruturadas sob o silêncio da planície alentejana.
+              {t('footer.tagline')}
             </p>
+            <div className="flex items-center space-x-3 pt-2">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="icon-btn" aria-label="Instagram">
+                <Instagram size={14} />
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="icon-btn" aria-label="Facebook">
+                <Facebook size={14} />
+              </a>
+              <a href="mailto:atelier@azevedomuhanguena.com" className="icon-btn" aria-label="Email">
+                <Mail size={14} />
+              </a>
+            </div>
           </div>
 
           {/* Navigation */}
-          <div className="space-y-2">
-            <h5 className={`text-[10px] uppercase tracking-[0.3em] font-semibold ${darkMode ? 'text-zinc-300' : 'text-zinc-800'}`}>
-              Navegação
+          <div className="space-y-4">
+            <h5 className="text-[10px] uppercase tracking-[0.3em] font-semibold" style={{ color: 'var(--color-fg-primary)' }}>
+              {t('footer.navTitle')}
             </h5>
-            <ul className="space-y-2 text-xs font-light">
+            <ul className="space-y-2.5 text-xs font-light">
               {[
-                { href: '/',          label: 'Início' },
-                { href: '/galeria',   label: 'Galeria de Obras' },
-                { href: '/agenda',    label: 'Agenda & Exposições' },
-                { href: '/biografia', label: 'Biografia' },
-                { href: '/contacto',  label: 'Contacto' },
+                { href: '/',          label: t('footer.navHome') },
+                { href: '/obras',     label: t('footer.navObras') },
+                { href: '/galeria',   label: t('footer.navGaleria') },
+                { href: '/agenda',    label: t('footer.navAgenda') },
+                { href: '/biografia', label: t('footer.navBiografia') },
+                { href: '/contacto',  label: t('footer.navContacto') },
               ].map(item => (
                 <li key={item.href}>
                   <Link
-                    href={item.href}
-                    className="hover:text-brand-gold transition-colors focus:outline-none"
+                    href={item.href as any}
+                    className="hover:text-brand-gold transition-colors duration-200 focus-visible:outline-none"
                   >
                     {item.label}
                   </Link>
@@ -53,50 +62,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social */}
-          <div className="space-y-2">
-            <h5 className={`text-[10px] uppercase tracking-[0.3em] font-semibold ${darkMode ? 'text-zinc-300' : 'text-zinc-800'}`}>
-              Atelier & Contactos
+          {/* Contact */}
+          <div className="space-y-4">
+            <h5 className="text-[10px] uppercase tracking-[0.3em] font-semibold" style={{ color: 'var(--color-fg-primary)' }}>
+              {t('footer.contactTitle')}
             </h5>
-            <ul className="space-y-2 text-xs font-light">
+            <ul className="space-y-3 text-xs font-light">
               <li className="flex items-center space-x-2">
-                <Mail size={12} className="text-brand-gold" />
-                <a href="mailto:atelier@azevedomuhanguena.com" className="hover:text-brand-gold transition-colors">
+                <Mail size={12} className="text-brand-gold flex-shrink-0" />
+                <a href="mailto:atelier@azevedomuhanguena.com" className="hover:text-brand-gold transition-colors duration-200">
                   atelier@azevedomuhanguena.com
                 </a>
               </li>
-              <li>Luanda, Angola</li>
-              <li className="pt-2 flex items-center space-x-4">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                  className="hover:text-brand-gold transition-colors" aria-label="Instagram">
-                  <Instagram size={14} />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-                  className="hover:text-brand-gold transition-colors" aria-label="Facebook">
-                  <Facebook size={14} />
-                </a>
-              </li>
+              <li>{t('footer.location')}</li>
             </ul>
           </div>
         </div>
 
-        <div className={`pt-2 border-t flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-light tracking-wider ${
-          darkMode ? 'border-white/5 text-zinc-600' : 'border-black/5 text-zinc-400'
-        }`}>
+        <div
+          className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-light tracking-wider"
+          style={{ borderTop: '1px solid var(--color-border-subtle)', color: 'var(--color-fg-muted)' }}
+        >
           <div>
-            &copy; {new Date().getFullYear()} Azevedo Muhanguena. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} Azevedo Muhanguena. {t('footer.rights')}
           </div>
-          <div className="flex items-center space-x-4">
-            <button
-              id="back-to-top"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center space-x-1 hover:text-brand-gold transition-colors focus:outline-none group"
-              aria-label="Subir ao topo"
-            >
-              <span>Subir</span>
-              <ArrowUp size={11} className="group-hover:-translate-y-0.5 transition-transform" />
-            </button>
-          </div>
+          <button
+            id="back-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center space-x-1.5 hover:text-brand-gold transition-colors duration-200 focus-visible:outline-none group"
+            aria-label={t('footer.backToTop')}
+          >
+            <span>{t('footer.backToTop')}</span>
+            <ArrowUp size={11} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
+          </button>
         </div>
       </div>
     </footer>

@@ -13,3 +13,5 @@ gunicorn>=21.2
 django-extensions
 drf-spectacular
 drf-yasg
+deep-translator>=1.11
+django-csp>=4.0

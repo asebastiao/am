@@ -1,13 +1,20 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { getArtworks } from '@/lib/api';
 import GalleryGrid from '@/components/gallery/GalleryGrid';
 
 export const metadata: Metadata = {
-  title: 'Galeria',
+  title: 'Obras',
   description: 'Colecção completa de obras de Azevedo Muhanguena — pinturas, esculturas e relevos texturais.',
 };
 
-export default async function GaleriaPage() {
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function ObrasPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const artworks = await getArtworks();
 
   return (

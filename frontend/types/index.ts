@@ -64,3 +64,13 @@ export interface ContactInfo {
   link_whatsapp:     string;
   mensagem_agradecimento: string;
 }
+
+export interface GalleryItem {
+  id: number;
+  title: string;
+  image_url: string;
+  type: string;
+  date?: string;
+  order: number;
+  featured: boolean;
+}

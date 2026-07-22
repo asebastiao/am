@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import datetime
 
+from portfolio_am_backend.validators import validate_image_file
+
 
 class Obra(models.Model):
     """Obra do artista."""
@@ -9,7 +11,8 @@ class Obra(models.Model):
     # ── Campos originais (já na BD) ──────────────────
     titulo      = models.CharField(max_length=200, verbose_name="Título")
     descricao   = models.TextField(verbose_name="Descrição", null=True, blank=True)
-    imagem      = models.ImageField(upload_to='obras/', verbose_name="Imagem", help_text="Imagem da obra")
+    imagem      = models.ImageField(upload_to='obras/', verbose_name="Imagem", help_text="Imagem da obra",
+                                    validators=[validate_image_file])
     tecnica     = models.CharField(max_length=100, verbose_name="Técnica")
     dimensoes   = models.CharField(max_length=80, verbose_name="Dimensões", blank=True,
                                    help_text='Ex: "130 × 105 cm"')
@@ -58,7 +61,8 @@ class Obra(models.Model):
 class ImagemObra(models.Model):
     """Imagens adicionais de uma obra."""
     obra    = models.ForeignKey(Obra, on_delete=models.CASCADE, related_name='imagens_extra')
-    imagem  = models.ImageField(upload_to='obras/extra/', verbose_name="Imagem")
+    imagem  = models.ImageField(upload_to='obras/extra/', verbose_name="Imagem",
+                                validators=[validate_image_file])
     legenda = models.CharField(max_length=200, blank=True)
     ordem   = models.PositiveSmallIntegerField(default=0)
 

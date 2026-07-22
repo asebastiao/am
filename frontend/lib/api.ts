@@ -1,4 +1,4 @@
-import { Artwork, Biography, AgendaEvent, ContactInfo, ContactMessage } from '@/types';
+import { Artwork, Biography, AgendaEvent, ContactInfo, ContactMessage, GalleryItem } from '@/types';
 
 // Em SSR (Next.js Server Components) precisamos de URL absoluta.
 // Em CSR (Contact Form submit) as rewrites do next.config tratam o /api.
@@ -73,11 +73,24 @@ function mapEvento(raw: Record<string, unknown>): AgendaEvent {
 
 async function apiFetch(path: string, options?: RequestInit) {
   const url = serverUrl(path);
+  // Merge headers and add Accept-Language based on client cookie when available
+  const baseHeaders: Record<string, string> = (options && (options.headers as Record<string, string>)) || {};
+  if (typeof window !== 'undefined') {
+    const match = document.cookie.match(/(?:^|; )am_locale=(en|pt)(?:;|$)/);
+    const locale = match && match[1] ? (match[1] === 'en' ? 'en-US' : 'pt-PT') : (navigator.language || 'pt-PT');
+    baseHeaders['Accept-Language'] = locale;
+  } else {
+    baseHeaders['Accept-Language'] = 'pt-PT';
+  }
+
   const res = await fetch(url, {
     ...options,
+    headers: {
+      ...baseHeaders,
+      ...(options && (options.headers as Record<string, string>)),
+    },
     // Server Components: sem cache por defeito para dados dinâmicos
     next: { revalidate: 60 },
-    ...options,
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${url}`);
   return res.json();
@@ -86,9 +99,13 @@ async function apiFetch(path: string, options?: RequestInit) {
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export async function getArtworks(): Promise<Artwork[]> {
-  const data = await apiFetch('/api/obras/');
-  const list = Array.isArray(data) ? data : (data.results ?? []);
-  return list.map(mapObra);
+  try {
+    const data = await apiFetch('/api/obras/');
+    const list = Array.isArray(data) ? data : (data.results ?? []);
+    return list.map(mapObra);
+  } catch {
+    return [];
+  }
 }
 
 export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
@@ -101,9 +118,13 @@ export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
 }
 
 export async function getFeaturedArtworks(): Promise<Artwork[]> {
-  const data = await apiFetch('/api/obras/?destaque=true');
-  const list = Array.isArray(data) ? data : (data.results ?? []);
-  return list.map(mapObra);
+  try {
+    const data = await apiFetch('/api/obras/?destaque=true');
+    const list = Array.isArray(data) ? data : (data.results ?? []);
+    return list.map(mapObra);
+  } catch {
+    return [];
+  }
 }
 
 export async function getBiography(): Promise<Biography | null> {
@@ -115,10 +136,47 @@ export async function getBiography(): Promise<Biography | null> {
   }
 }
 
+function mapGalleryItem(raw: Record<string, unknown>): GalleryItem {
+  return {
+    id: (raw.id as number) ?? 0,
+    title: (raw.titulo as string) ?? '',
+    image_url: (raw.imagem_url as string) ?? '',
+    type: (raw.tipo as string) ?? 'arquivo',
+    date: (raw.data as string) ?? '',
+    order: (raw.ordem as number) ?? 0,
+    featured: (raw.destaque as boolean) ?? false,
+  };
+}
+
+export async function getHomeGalleryItems(): Promise<GalleryItem[]> {
+  try {
+    const data = await apiFetch('/api/galeria/destaque/');
+    const list = Array.isArray(data) ? data : (data.results ?? []);
+    return list.map(mapGalleryItem).filter((item: GalleryItem) => Boolean(item.image_url));
+  } catch {
+    return [];
+  }
+}
+
+export async function getGalleryItems(tipo?: string): Promise<GalleryItem[]> {
+  try {
+    const qs = tipo ? `?tipo=${encodeURIComponent(tipo)}` : '';
+    const data = await apiFetch(`/api/galeria/${qs}`);
+    const list = Array.isArray(data) ? data : (data.results ?? []);
+    return list.map(mapGalleryItem).filter((item: GalleryItem) => Boolean(item.image_url));
+  } catch {
+    return [];
+  }
+}
+
 export async function getAgenda(): Promise<AgendaEvent[]> {
-  const data = await apiFetch('/api/agenda/');
-  const list = Array.isArray(data) ? data : (data.results ?? []);
-  return list.map(mapEvento);
+  try {
+    const data = await apiFetch('/api/agenda/');
+    const list = Array.isArray(data) ? data : (data.results ?? []);
+    return list.map(mapEvento);
+  } catch {
+    return [];
+  }
 }
 
 export async function getContactInfo(): Promise<ContactInfo | null> {
@@ -161,3 +219,4 @@ export async function submitContact(
   }
   return { success: true, message: data.message ?? 'Mensagem enviada com sucesso!' };
 }
+

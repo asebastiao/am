@@ -2,6 +2,7 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from portfolio_am_backend.permissions import IsAdminOrReadOnly
 from .models import ItemGaleria
 from .serializers import ItemGaleriaSerializer, ItemGaleriaListSerializer
 
@@ -9,11 +10,13 @@ from .serializers import ItemGaleriaSerializer, ItemGaleriaListSerializer
 class ItemGaleriaViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gerenciar itens da galeria.
-    
-    Permite operações CRUD e filtros por tipo e status.
+
+    Leitura (GET) é pública. Escrita (POST/PUT/PATCH/DELETE) exige conta
+    de staff autenticada — a gestão de conteúdo deve ser feita no Django Admin.
     """
     queryset = ItemGaleria.objects.filter(ativo=True)
     serializer_class = ItemGaleriaSerializer
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['tipo', 'ativo']
     search_fields = ['titulo', 'descricao']
@@ -58,9 +61,11 @@ class ItemGaleriaViewSet(viewsets.ModelViewSet):
         return Response(resultado)
 
     @action(detail=False, methods=['get'])
-    def home(self, request):
-        """Endpoint especial para a página home - retorna itens em destaque"""
-        # Pega os primeiros 6 itens ordenados por ordem e data
-        itens_home = self.get_queryset()[:6]
-        serializer = ItemGaleriaListSerializer(itens_home, many=True, context={'request': request})
+    def destaque(self, request):
+        """Endpoint para o carrossel da página inicial: só os itens
+        marcados como Destaque no Django admin, ordenados por `ordem`.
+        Continuam a aparecer normalmente em Exposições/Arquivo na Galeria —
+        "Destaque" só controla o carrossel da Home."""
+        itens = self.get_queryset().filter(destaque=True).order_by('ordem', '-data_criacao')
+        serializer = ItemGaleriaListSerializer(itens, many=True, context={'request': request})
         return Response(serializer.data)

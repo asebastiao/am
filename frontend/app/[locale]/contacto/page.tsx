@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { getArtworks, getContactInfo } from '@/lib/api';
 import ContactForm from '@/components/contact/ContactForm';
 
@@ -8,10 +9,13 @@ export const metadata: Metadata = {
 };
 
 interface Props {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ obra?: string }>;
 }
 
-export default async function ContactoPage({ searchParams }: Props) {
+export default async function ContactoPage({ params, searchParams }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const { obra } = await searchParams;
   const artworkId = obra ? parseInt(obra, 10) || null : null;
 

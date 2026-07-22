@@ -20,6 +20,18 @@ class ImagemObraInline(admin.TabularInline):
 @admin.register(Obra)
 class ObraAdmin(admin.ModelAdmin):
     list_display    = ['thumb', 'titulo', 'tecnica', 'ano_criacao', 'badge_disponivel', 'destaque', 'visivel', 'data_criacao']
+    view_on_site = True
+
+    def get_view_on_site_url(self, obj=None):
+        from django.conf import settings
+        frontend = settings.FRONTEND_URL.rstrip('/')
+        if obj is None:
+            return frontend + '/galeria'
+        try:
+            slug = obj.slug
+            return f"{frontend}/galeria/{slug}"
+        except Exception:
+            return frontend + '/galeria'
     list_display_links = ['thumb', 'titulo']
     list_filter     = ['disponivel', 'destaque', 'visivel', 'ano_criacao']
     search_fields   = ['titulo', 'descricao', 'tecnica']

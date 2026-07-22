@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from obras.models import Obra
+from portfolio_am_backend.validators import validate_image_file
 import os
 
 
@@ -20,10 +21,8 @@ class ItemGaleria(models.Model):
     """
     
     TIPO_CHOICES = [
-        ('evento', _('Evento')),
         ('exposicao', _('Exposição')),
-        ('obra', _('Obra')),
-        ('outros', _('Outros')),
+        ('arquivo', _('Arquivo')),
     ]
     
     titulo = models.CharField(
@@ -44,7 +43,8 @@ class ItemGaleria(models.Model):
         upload_to=galeria_image_path,
         blank=True,
         null=True,
-        help_text=_('Imagem individual (use apenas se não referenciar uma obra)')
+        help_text=_('Imagem individual (use apenas se não referenciar uma obra)'),
+        validators=[validate_image_file],
     )
     
     obra = models.ForeignKey(
@@ -60,7 +60,7 @@ class ItemGaleria(models.Model):
         _('Tipo'),
         max_length=20,
         choices=TIPO_CHOICES,
-        default='outros',
+        default='arquivo',
         help_text=_('Tipo do item da galeria')
     )
     
@@ -91,6 +91,15 @@ class ItemGaleria(models.Model):
         _('Ordem'),
         default=0,
         help_text=_('Ordem de exibição (menor número aparece primeiro)')
+    )
+
+    destaque = models.BooleanField(
+        _('Destaque (Carrossel da Home)'),
+        default=False,
+        help_text=_(
+            'Marque para esta imagem aparecer no carrossel da página inicial. '
+            'O item continua a aparecer normalmente em Exposições/Arquivo na Galeria.'
+        )
     )
 
     class Meta:

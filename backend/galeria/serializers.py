@@ -8,7 +8,7 @@ class ItemGaleriaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = ItemGaleria
-        fields = ['id', 'titulo', 'imagem_url', 'tipo', 'data', 'ordem']
+        fields = ['id', 'titulo', 'imagem_url', 'tipo', 'data', 'ordem', 'destaque']
 
     def get_imagem_url(self, obj):
         imagem = obj.imagem_display
@@ -25,7 +25,7 @@ class ItemGaleriaSerializer(serializers.ModelSerializer):
     class Meta:
         model  = ItemGaleria
         fields = ['id', 'titulo', 'descricao', 'descricao_display', 'imagem', 'imagem_url',
-                  'obra', 'obra_detalhes', 'tipo', 'data', 'data_criacao', 'ativo', 'ordem']
+                  'obra', 'obra_detalhes', 'tipo', 'data', 'data_criacao', 'ativo', 'ordem', 'destaque']
         read_only_fields = ['data_criacao']
 
     def get_imagem_url(self, obj):
